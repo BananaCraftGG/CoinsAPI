@@ -1,0 +1,10 @@
+name: CoinsAPI
+version: 1.0
+author: brownie
+main: de.brownie.coinsapi.CoinsAPIPlugin
+load: POSTWORLD
+
+commands:
+  coins:
+  addcoins:
+  resetcoins:
