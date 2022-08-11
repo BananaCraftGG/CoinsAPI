@@ -36,7 +36,6 @@ public class ResetCoinsCMD
         } else if (commandSender instanceof ConsoleCommandSender) {
             if (args.length == 1) {
                 String name = args[0];
-                ;
                 if (Objects.nonNull(name)) {
                     try {
                         CoinsAPIPlugin.INSTANCE.getCoinsAPI().resetCoins(name);
