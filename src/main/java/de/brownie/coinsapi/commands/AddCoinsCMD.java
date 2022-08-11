@@ -39,6 +39,10 @@ public class AddCoinsCMD implements CommandExecutor {
                                 throw new RuntimeException(e);
                             }
                             ChatUtils.sendMessage(p, String.format("&7You gave &e%s &7Coins &b%s&7!", amount, name));
+                            Player target = Bukkit.getPlayer(name);
+                            if(Objects.nonNull(target)) {
+                                ChatUtils.sendMessage(target, "You have received &e" + amount + " &7Coins!");
+                            }
                         }
                     } else {
                         ChatUtils.sendMessage(p, "&c/addcoins <amount>");
@@ -62,6 +66,10 @@ public class AddCoinsCMD implements CommandExecutor {
                         throw new RuntimeException(e);
                     }
                     ChatUtils.sendConsoleMessage("You gave &e" + amount + " &7Coins to &b" + name);
+                    Player target = Bukkit.getPlayer(name);
+                    if(Objects.nonNull(target)) {
+                        ChatUtils.sendMessage(target, "You have received &e" + amount + " &7Coins!");
+                    }
                 }
             }
             else {
