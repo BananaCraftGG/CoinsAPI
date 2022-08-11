@@ -96,9 +96,7 @@ public class VaultHook extends AbstractEconomy {
     @Override
     public boolean has(String playerName, double amount) {
         try {
-            ChatUtils.sendMessage(Bukkit.getPlayer(playerName), "check");
             if(databaseAPI.getCoins(playerName) > amount) {
-                ChatUtils.sendMessage(Bukkit.getPlayer(playerName), "true");
                 return true;
             }
         } catch (SQLException e) {

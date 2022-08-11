@@ -45,12 +45,10 @@ public class CoinsAPI {
     @SneakyThrows
     public int getCoins(String playerName) {
         if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
-            Bukkit.broadcastMessage("using hook");
             Player target = (Player) Bukkit.getOfflinePlayer(playerName);
             return (int) CoinsAPIPlugin.INSTANCE.getVaultAPI().getBalance(target);
         }
         else {
-            Bukkit.broadcastMessage("using legacy");
             return CoinsAPIPlugin.INSTANCE.getDatabaseAPI().getCoins(playerName);
         }
     }
