@@ -19,13 +19,8 @@ public class ResetCoinsCMD
             Player p = (Player) commandSender;
             if (p.hasPermission("lobby.admin")) {
                 if (args.length == 1) {
-                    try {
                         CoinsAPIPlugin.INSTANCE.getCoinsAPI().resetCoins(args[0]);
                         ChatUtils.sendMessage(p, "&aSuccessfully reset &b" + args[0] + "'s &acoins.");
-                    } catch (SQLException e) {
-                        ChatUtils.sendMessage(p, e.getMessage());
-                        throw new RuntimeException(e);
-                    }
                 } else {
                     ChatUtils.sendMessage(p, "&c/resetcoins <player>");
                 }
@@ -37,11 +32,7 @@ public class ResetCoinsCMD
             if (args.length == 1) {
                 String name = args[0];
                 if (Objects.nonNull(name)) {
-                    try {
-                        CoinsAPIPlugin.INSTANCE.getCoinsAPI().resetCoins(name);
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                    CoinsAPIPlugin.INSTANCE.getCoinsAPI().resetCoins(name);
                     ChatUtils.sendConsoleMessage("You have reset &b" + name + "'s &7Coins");
                 }
             } else {

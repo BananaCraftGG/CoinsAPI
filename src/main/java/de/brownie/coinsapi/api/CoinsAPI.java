@@ -1,59 +1,60 @@
 package de.brownie.coinsapi.api;
 
 import de.brownie.coinsapi.CoinsAPIPlugin;
+import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CoinsAPI {
-
-    public void addCoins(String playerName) throws SQLException {
-        PreparedStatement statement = CoinsAPIPlugin.INSTANCE.getCoinsAPIDatabase().getConnection()
-                .prepareStatement("REPLACE INTO coins(playerName, coins) VALUES (?, ?)");
-        statement.setString(1, playerName);
-        statement.setInt(2, getCoins(playerName) + 1);
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    public void addCoins(String playerName, int amount) throws SQLException {
-        PreparedStatement statement = CoinsAPIPlugin.INSTANCE.getCoinsAPIDatabase().getConnection()
-                .prepareStatement("REPLACE INTO coins(playerName, coins) VALUES (?, ?)");
-        statement.setString(1, playerName);
-        statement.setInt(2, getCoins(playerName) + amount);
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    public void removeCoins(String playerName, int amount) throws SQLException {
-        PreparedStatement statement = CoinsAPIPlugin.INSTANCE.getCoinsAPIDatabase().getConnection()
-                .prepareStatement("REPLACE INTO coins(playername, coins) VALUES (?, ?)");
-        statement.setString(1, playerName);
-        statement.setInt(2, getCoins(playerName) - amount);
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    public void resetCoins(String playerName) throws SQLException {
-        PreparedStatement statement = CoinsAPIPlugin.INSTANCE.getCoinsAPIDatabase().getConnection()
-                .prepareStatement("REPLACE INTO coins(playerName, coins) VALUES (?, ?)");
-        statement.setString(1, playerName);
-        statement.setInt(2, 0);
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    public int getCoins(String playerName) throws SQLException {
-        PreparedStatement statement = CoinsAPIPlugin.INSTANCE.getCoinsAPIDatabase().getConnection().prepareStatement("SELECT coins FROM coins WHERE playerName = ?");
-        statement.setString(1, playerName);
-        ResultSet resultSet = statement.executeQuery();
-        if(resultSet.next()){
-            return Integer.parseInt(resultSet.getString("coins"));
+    @SneakyThrows
+    public void addCoins(String playerName, int amount) {
+        if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
+            Player target = (Player) Bukkit.getOfflinePlayer(playerName);
+            CoinsAPIPlugin.INSTANCE.getVaultAPI().depositPlayer(target, amount);
         }
-        statement.close();
-        return 0;
+        else {
+            CoinsAPIPlugin.INSTANCE.getDatabaseAPI().removeCoins(playerName, amount);
+        }
     }
+    @SneakyThrows
+    public void removeCoins(String playerName, int amount) {
+        if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
+            Player target = (Player) Bukkit.getOfflinePlayer(playerName);
+            CoinsAPIPlugin.INSTANCE.getVaultAPI().withdrawPlayer(target, amount);
+        }
+        else {
+            CoinsAPIPlugin.INSTANCE.getDatabaseAPI().removeCoins(playerName, amount);
+        }
+    }
+
+    @SneakyThrows
+    public void resetCoins(String playerName) {
+        if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
+            Player target = (Player) Bukkit.getOfflinePlayer(playerName);
+            CoinsAPIPlugin.INSTANCE.getVaultAPI().withdrawPlayer(target, CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(playerName));
+        }
+        else {
+            CoinsAPIPlugin.INSTANCE.getDatabaseAPI().resetCoins(playerName);
+        }
+    }
+
+    @SneakyThrows
+    public int getCoins(String playerName) {
+        if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
+            Bukkit.broadcastMessage("using hook");
+            Player target = (Player) Bukkit.getOfflinePlayer(playerName);
+            return (int) CoinsAPIPlugin.INSTANCE.getVaultAPI().getBalance(target);
+        }
+        else {
+            Bukkit.broadcastMessage("using legacy");
+            return CoinsAPIPlugin.INSTANCE.getDatabaseAPI().getCoins(playerName);
+        }
+    }
+
     public boolean doesPlayerExist(String playerName) {
         if (!CoinsAPIPlugin.INSTANCE.getCoinsAPIDatabase().isConnected()) {
             return true;
@@ -75,5 +76,4 @@ public class CoinsAPI {
         }
         return false;
     }
-
 }
