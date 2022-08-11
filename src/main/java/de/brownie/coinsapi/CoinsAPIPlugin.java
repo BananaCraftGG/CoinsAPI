@@ -3,6 +3,7 @@ package de.brownie.coinsapi;
 import de.brownie.coinsapi.api.CoinsAPI;
 import de.brownie.coinsapi.commands.AddCoinsCMD;
 import de.brownie.coinsapi.commands.CoinsCMD;
+import de.brownie.coinsapi.commands.ResetCoinsCMD;
 import de.brownie.coinsapi.config.CoinsAPIConfig;
 import de.brownie.coinsapi.database.Database;
 import de.brownie.coinsapi.listeners.PlayerJoinListener;
@@ -41,6 +42,7 @@ public class CoinsAPIPlugin extends JavaPlugin {
     }
     private void registerCommands() {
         this.getCommand("addcoins").setExecutor(new AddCoinsCMD());
+        this.getCommand("resetcoins").setExecutor(new ResetCoinsCMD());
         this.getCommand("coins").setExecutor(new CoinsCMD());
     }
 }
