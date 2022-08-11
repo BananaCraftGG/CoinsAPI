@@ -17,10 +17,10 @@ public class AddCoinsCMD implements CommandExecutor {
         if (commandSender instanceof Player) {
             final Player p = (Player) commandSender;
             if (p.hasPermission("coins.admin")) {
-                if (args.length > 0) {
-                    if (args.length == 1) {
-                        String amount = args[0];
+                switch (args.length) {
+                    case 1:
                         try {
+                            String amount = args[0];
                             if (Objects.nonNull(amount)) {
                                 try {
                                     CoinsAPIPlugin.INSTANCE.getCoinsAPI().addCoins(p.getName(), Integer.parseInt(amount));
@@ -32,7 +32,7 @@ public class AddCoinsCMD implements CommandExecutor {
                         } catch (NumberFormatException e) {
                             ChatUtils.sendMessage(p, "&cAmount was not a valid number!");
                         }
-                    } else if (args.length == 2) {
+                    case 2:
                         String name = args[0];
                         String amount = args[1];
                         try {
@@ -47,13 +47,9 @@ public class AddCoinsCMD implements CommandExecutor {
                         } catch (NumberFormatException e) {
                             ChatUtils.sendMessage(p, "&cAmount was not a valid number!");
                         }
-                    } else {
+                    default:
                         ChatUtils.sendMessage(p, "&c/addcoins <amount>");
                         ChatUtils.sendMessage(p, "&c/addcoins <player> <amount>");
-                    }
-                } else {
-                    ChatUtils.sendMessage(p, "&c/addcoins <amount>");
-                    ChatUtils.sendMessage(p, "&c/addcoins <player> <amount>");
                 }
             } else {
                 ChatUtils.sendMessage(p, "&cYou do not have permissions!");
@@ -70,12 +66,11 @@ public class AddCoinsCMD implements CommandExecutor {
                     }
                     ChatUtils.sendConsoleMessage("You gave &e" + amount + " &7Coins to &b" + name);
                     Player target = Bukkit.getPlayer(name);
-                    if(Objects.nonNull(target)) {
+                    if (Objects.nonNull(target)) {
                         ChatUtils.sendMessage(target, "You have received &e" + amount + " &7Coins!");
                     }
                 }
-            }
-            else {
+            } else {
                 ChatUtils.sendConsoleMessage("&c/addcoins <player> <amount>");
             }
         }

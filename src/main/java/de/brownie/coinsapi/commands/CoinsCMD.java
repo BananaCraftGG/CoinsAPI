@@ -17,42 +17,43 @@ public class CoinsCMD
     public boolean onCommand(CommandSender commandSender, Command cmd, String label, String[] args) {
         if (commandSender instanceof Player) {
             Player p = (Player) commandSender;
-            if (args.length == 0) {
-                try {
-                    ChatUtils.sendMessage(p, "&7Your Coins: &e" + CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(p.getName()));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else if (args.length == 1) {
-                try {
-                    String playerName = args[0];
-                    if (CoinsAPIPlugin.INSTANCE.getCoinsAPI().doesPlayerExist(playerName)) {
-                        ChatUtils.sendMessage(p, String.format("&b%s &7has &e%s &7%s", playerName, CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(playerName), "Coins"));
-                    } else {
-                        ChatUtils.sendMessage(p, String.format("&b%s &7was not found!", playerName));
+            switch (args.length) {
+                case 0:
+                    try {
+                        ChatUtils.sendMessage(p, "&7Your Coins: &e" + CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(p.getName()));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                ChatUtils.sendMessage(p, "&c/coins");
-                ChatUtils.sendMessage(p, "&c/coins <player>");
+                case 1:
+                    try {
+                        String playerName = args[0];
+                        if (CoinsAPIPlugin.INSTANCE.getCoinsAPI().doesPlayerExist(playerName)) {
+                            ChatUtils.sendMessage(p, String.format("&b%s &7has &e%s &7%s", playerName, CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(playerName), "Coins"));
+                        } else {
+                            ChatUtils.sendMessage(p, String.format("&b%s &7was not found!", playerName));
+                        }
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                default:
+                    ChatUtils.sendMessage(p, "&c/coins");
+                    ChatUtils.sendMessage(p, "&c/coins <player>");
             }
         } else if (commandSender instanceof ConsoleCommandSender) {
-            if (args.length == 2) {
-                String name = args[0];
-                int amount = 0;
-                try {
-                    amount = CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(name);
-                    ChatUtils.sendConsoleMessage("&b" + name + "&7 has&e" + amount + " &7Coins.");
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                ChatUtils.sendConsoleMessage("&c/addcoins <player> <amount>");
+            switch (args.length) {
+                case 2:
+                    String name = args[0];
+                    int amount = 0;
+                    try {
+                        amount = CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(name);
+                        ChatUtils.sendConsoleMessage("&b" + name + "&7 has&e" + amount + " &7Coins.");
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                default:
+                    ChatUtils.sendConsoleMessage("&c/addcoins <player> <amount>");
             }
         }
         return false;
     }
-
 }
