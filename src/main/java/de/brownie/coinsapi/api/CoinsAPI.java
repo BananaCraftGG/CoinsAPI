@@ -12,45 +12,37 @@ import java.sql.SQLException;
 public class CoinsAPI {
     @SneakyThrows
     public void addCoins(String playerName, int amount) {
-        if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
-            Player target = (Player) Bukkit.getOfflinePlayer(playerName);
+        if (CoinsAPIPlugin.INSTANCE.isVaultEnabled() && Bukkit.getPlayer(playerName) != null) {
+            Player target = Bukkit.getPlayer(playerName);
             CoinsAPIPlugin.INSTANCE.getVaultAPI().depositPlayer(target, amount);
-        }
-        else {
+        } else {
             CoinsAPIPlugin.INSTANCE.getDatabaseAPI().removeCoins(playerName, amount);
         }
     }
+
     @SneakyThrows
     public void removeCoins(String playerName, int amount) {
-        if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
-            Player target = (Player) Bukkit.getOfflinePlayer(playerName);
+        if (CoinsAPIPlugin.INSTANCE.isVaultEnabled() && Bukkit.getPlayer(playerName) != null) {
+            Player target = Bukkit.getPlayer(playerName);
             CoinsAPIPlugin.INSTANCE.getVaultAPI().withdrawPlayer(target, amount);
-        }
-        else {
+        } else {
             CoinsAPIPlugin.INSTANCE.getDatabaseAPI().removeCoins(playerName, amount);
         }
     }
 
     @SneakyThrows
     public void resetCoins(String playerName) {
-        if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
-            Player target = (Player) Bukkit.getOfflinePlayer(playerName);
+        if (CoinsAPIPlugin.INSTANCE.isVaultEnabled() && Bukkit.getPlayer(playerName) != null) {
+            Player target = Bukkit.getPlayer(playerName);
             CoinsAPIPlugin.INSTANCE.getVaultAPI().withdrawPlayer(target, CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(playerName));
-        }
-        else {
+        } else {
             CoinsAPIPlugin.INSTANCE.getDatabaseAPI().resetCoins(playerName);
         }
     }
 
     @SneakyThrows
     public int getCoins(String playerName) {
-        if(CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
-            Player target = (Player) Bukkit.getOfflinePlayer(playerName);
-            return (int) CoinsAPIPlugin.INSTANCE.getVaultAPI().getBalance(target);
-        }
-        else {
-            return CoinsAPIPlugin.INSTANCE.getDatabaseAPI().getCoins(playerName);
-        }
+        return CoinsAPIPlugin.INSTANCE.getDatabaseAPI().getCoins(playerName);
     }
 
     public boolean doesPlayerExist(String playerName) {
