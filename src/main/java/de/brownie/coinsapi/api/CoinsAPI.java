@@ -16,7 +16,7 @@ public class CoinsAPI {
             Player target = Bukkit.getPlayer(playerName);
             CoinsAPIPlugin.INSTANCE.getVaultAPI().depositPlayer(target, amount);
         } else {
-            CoinsAPIPlugin.INSTANCE.getDatabaseAPI().removeCoins(playerName, amount);
+            CoinsAPIPlugin.INSTANCE.getDatabaseAPI().addCoins(playerName, amount);
         }
     }
 
