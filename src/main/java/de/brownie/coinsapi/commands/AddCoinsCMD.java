@@ -3,6 +3,7 @@ package de.brownie.coinsapi.commands;
 import de.brownie.coinsapi.CoinsAPIPlugin;
 import de.brownie.coinsapi.utils.ChatUtils;
 import lombok.SneakyThrows;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,19 +22,30 @@ public class AddCoinsCMD implements CommandExecutor {
                 switch (args.length) {
                     case 1:
                         try {
-                            int amount = Integer.parseInt(args[0]);
-                            CoinsAPIPlugin.INSTANCE.getCoinsAPI().addCoins(p.getName(), amount);
+                            String amount = args[0];
+                            if (Objects.nonNull(amount) && CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
+                                EconomyResponse r = CoinsAPIPlugin.INSTANCE.getVaultAPI().depositPlayer(p, Integer.parseInt(amount));
+                                if (!r.transactionSuccess()) {
+                                    ChatUtils.sendMessage(p, String.format("&cError", amount));
+                                }
+                                ChatUtils.sendMessage(p, "using hook");
+                            } else {
+                                CoinsAPIPlugin.INSTANCE.getCoinsAPI().addCoins(p.getName(), Integer.parseInt(amount));
+                                ChatUtils.sendMessage(p, "using legacy");
+                            }
                             ChatUtils.sendMessage(p, String.format("&7You gave &byourself &e%s Coins &7!", amount));
                         } catch (NumberFormatException e) {
                             ChatUtils.sendMessage(p, "&cAmount was not a valid number!");
                         }
                         break;
                     case 2:
-                        String targetName = args[0];
+                        String name = args[0];
                         String amount = args[1];
                         try {
-                            CoinsAPIPlugin.INSTANCE.getCoinsAPI().addCoins(targetName, Integer.parseInt(amount));
-                            ChatUtils.sendMessage(p, String.format("&7You gave &e%s Coins &7to &b%s&7!", amount, targetName));
+                            if (Objects.nonNull(amount) && Objects.nonNull(name)) {
+                                CoinsAPIPlugin.INSTANCE.getCoinsAPI().addCoins(name, Integer.parseInt(amount));
+                                ChatUtils.sendMessage(p, String.format("&7You removed &e%s Coins &7from &b%s&7!", amount, name));
+                            }
                         } catch (NumberFormatException e) {
                             ChatUtils.sendMessage(p, "&cAmount was not a valid number!");
                         }
