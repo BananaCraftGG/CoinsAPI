@@ -28,10 +28,8 @@ public class AddCoinsCMD implements CommandExecutor {
                                 if (!r.transactionSuccess()) {
                                     ChatUtils.sendMessage(p, String.format("&cError", amount));
                                 }
-                                ChatUtils.sendMessage(p, "using hook");
                             } else {
                                 CoinsAPIPlugin.INSTANCE.getCoinsAPI().addCoins(p.getName(), Integer.parseInt(amount));
-                                ChatUtils.sendMessage(p, "using legacy");
                             }
                             ChatUtils.sendMessage(p, String.format("&7You gave &byourself &e%s Coins &7!", amount));
                         } catch (NumberFormatException e) {
