@@ -44,7 +44,7 @@ public class AddCoinsCMD implements CommandExecutor {
                         try {
                             if (Objects.nonNull(amount) && Objects.nonNull(name)) {
                                 CoinsAPIPlugin.INSTANCE.getCoinsAPI().addCoins(name, Integer.parseInt(amount));
-                                ChatUtils.sendMessage(p, String.format("&7You removed &e%s Coins &7from &b%s&7!", amount, name));
+                                ChatUtils.sendMessage(p, String.format("&7You gave &e%s Coins &7to &b%s&7!", amount, name));
                             }
                         } catch (NumberFormatException e) {
                             ChatUtils.sendMessage(p, "&cAmount was not a valid number!");
