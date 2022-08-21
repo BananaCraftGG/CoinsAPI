@@ -12,32 +12,18 @@ import java.sql.SQLException;
 public class CoinsAPI {
     @SneakyThrows
     public void addCoins(String playerName, int amount) {
-        if (CoinsAPIPlugin.INSTANCE.isVaultEnabled() && Bukkit.getPlayer(playerName) != null) {
-            Player target = Bukkit.getPlayer(playerName);
-            CoinsAPIPlugin.INSTANCE.getVaultAPI().depositPlayer(target, amount);
-        } else {
-            CoinsAPIPlugin.INSTANCE.getDatabaseAPI().addCoins(playerName, amount);
-        }
+        CoinsAPIPlugin.INSTANCE.getDatabaseAPI().addCoins(playerName, amount);
     }
+
 
     @SneakyThrows
     public void removeCoins(String playerName, int amount) {
-        if (CoinsAPIPlugin.INSTANCE.isVaultEnabled() && Bukkit.getPlayer(playerName) != null) {
-            Player target = Bukkit.getPlayer(playerName);
-            CoinsAPIPlugin.INSTANCE.getVaultAPI().withdrawPlayer(target, amount);
-        } else {
-            CoinsAPIPlugin.INSTANCE.getDatabaseAPI().removeCoins(playerName, amount);
-        }
+        CoinsAPIPlugin.INSTANCE.getDatabaseAPI().removeCoins(playerName, amount);
     }
 
     @SneakyThrows
     public void resetCoins(String playerName) {
-        if (CoinsAPIPlugin.INSTANCE.isVaultEnabled() && Bukkit.getPlayer(playerName) != null) {
-            Player target = Bukkit.getPlayer(playerName);
-            CoinsAPIPlugin.INSTANCE.getVaultAPI().withdrawPlayer(target, CoinsAPIPlugin.INSTANCE.getCoinsAPI().getCoins(playerName));
-        } else {
-            CoinsAPIPlugin.INSTANCE.getDatabaseAPI().resetCoins(playerName);
-        }
+        CoinsAPIPlugin.INSTANCE.getDatabaseAPI().resetCoins(playerName);
     }
 
     @SneakyThrows
