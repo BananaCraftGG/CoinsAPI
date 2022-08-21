@@ -21,8 +21,7 @@ public class RemoveCoinsCMD implements CommandExecutor {
                     case 1:
                         try {
                             String amount = args[0];
-                            if (Objects.nonNull(amount)) {
-                                if (CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
+                            if (Objects.nonNull(amount) && CoinsAPIPlugin.INSTANCE.isVaultEnabled()) {
                                     EconomyResponse r = CoinsAPIPlugin.INSTANCE.getVaultAPI().withdrawPlayer(p, Integer.parseInt(amount));
                                     if (!r.transactionSuccess()) {
                                         ChatUtils.sendMessage(p, String.format("&cError", amount));
@@ -33,7 +32,6 @@ public class RemoveCoinsCMD implements CommandExecutor {
                                     ChatUtils.sendMessage(p, "using legacy");
                                 }
                                 ChatUtils.sendMessage(p, String.format("&7You removed &byourself &e%s Coins &7!", amount));
-                            }
                         } catch (NumberFormatException e) {
                             ChatUtils.sendMessage(p, "&cAmount was not a valid number!");
                         }
